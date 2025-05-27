@@ -10,15 +10,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
+
 public class UserController {
 
     private final UserService userService;
+    public UserController(UserService userService){
+        this.userService=userService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserSignupRequest request) {
         UserResponse response = userService.registerUser(request);
         return ResponseEntity.ok(response);
+
     }
     @PostMapping("/login")
     public ResponseEntity<UserResponse> login(@RequestBody LoginRequest request) {
