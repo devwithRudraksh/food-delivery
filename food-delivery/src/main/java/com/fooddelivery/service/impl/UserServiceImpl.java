@@ -1,8 +1,8 @@
 package com.fooddelivery.service.impl;
 
-import com.fooddelivery.dto.LoginRequest;
-import com.fooddelivery.dto.UserSignupRequest;
-import com.fooddelivery.dto.UserResponse;
+import com.fooddelivery.dto.request.LoginRequest;
+import com.fooddelivery.dto.request.UserSignupRequest;
+import com.fooddelivery.dto.response.UserResponse;
 import com.fooddelivery.entity.User;
 import com.fooddelivery.repository.UserRepository;
 import com.fooddelivery.service.UserService;
@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {

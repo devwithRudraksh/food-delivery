@@ -1,9 +1,12 @@
-package com.fooddelivery.dto;
+package com.fooddelivery.dto.response;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class AddressRequest {
+@Builder
+public class AddressResponse {
+    private Long id;
     private String street;
     private String city;
     private String state;

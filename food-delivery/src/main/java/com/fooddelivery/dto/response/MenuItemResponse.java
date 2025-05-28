@@ -1,5 +1,6 @@
-package com.fooddelivery.dto;
+package com.fooddelivery.dto.response;
 
+import com.fooddelivery.enums.MenuCategory;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,4 +10,5 @@ public class MenuItemResponse {
     private Long id;
     private String name;
     private Double price;
+    private MenuCategory category;
 }

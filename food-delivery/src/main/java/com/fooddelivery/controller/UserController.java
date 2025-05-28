@@ -1,10 +1,9 @@
 package com.fooddelivery.controller;
 
-import com.fooddelivery.dto.LoginRequest;
-import com.fooddelivery.dto.UserSignupRequest;
-import com.fooddelivery.dto.UserResponse;
+import com.fooddelivery.dto.request.LoginRequest;
+import com.fooddelivery.dto.request.UserSignupRequest;
+import com.fooddelivery.dto.response.UserResponse;
 import com.fooddelivery.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

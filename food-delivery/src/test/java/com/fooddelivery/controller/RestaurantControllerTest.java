@@ -2,8 +2,8 @@ package com.fooddelivery.controller;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fooddelivery.dto.RestaurantRequest;
-import com.fooddelivery.dto.RestaurantResponse;
+import com.fooddelivery.dto.request.RestaurantRequest;
+import com.fooddelivery.dto.response.RestaurantResponse;
 import com.fooddelivery.service.RestaurantService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import java.util.List;
+
 @WebMvcTest(RestaurantController.class)
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc(addFilters = false) // ✅ disables Spring Security filters

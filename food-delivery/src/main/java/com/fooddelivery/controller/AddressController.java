@@ -1,9 +1,8 @@
 package com.fooddelivery.controller;
 
-import com.fooddelivery.dto.AddressRequest;
-import com.fooddelivery.dto.AddressResponse;
+import com.fooddelivery.dto.request.AddressRequest;
+import com.fooddelivery.dto.response.AddressResponse;
 import com.fooddelivery.service.AddressService;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
