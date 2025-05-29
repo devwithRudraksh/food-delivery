@@ -1,6 +1,6 @@
 package com.fooddelivery.service.impl;
-import com.fooddelivery.dto.LoginRequest;
-import com.fooddelivery.dto.UserSignupRequest;
+import com.fooddelivery.dto.request.LoginRequest;
+import com.fooddelivery.dto.request.UserSignupRequest;
 import com.fooddelivery.entity.User;
 import com.fooddelivery.repository.UserRepository;
 import org.junit.jupiter.api.Test;

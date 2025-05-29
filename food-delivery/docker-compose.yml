@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-fooddel
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fooddelivery
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - foodnet
+
+  app:
+    image: fooddelivery-app   # ← this must match the image name from docker build
+    container_name: springboot-app
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - foodnet
+
+volumes:
+  mysql-data:
+
+networks:
+  foodnet:

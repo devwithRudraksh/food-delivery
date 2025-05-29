@@ -1,7 +1,7 @@
 package com.fooddelivery.service.impl;
 import org.springframework.transaction.annotation.Transactional;
-import com.fooddelivery.dto.AddressRequest;
-import com.fooddelivery.dto.AddressResponse;
+import com.fooddelivery.dto.request.AddressRequest;
+import com.fooddelivery.dto.response.AddressResponse;
 import com.fooddelivery.entity.Address;
 import com.fooddelivery.entity.User;
 import com.fooddelivery.repository.AddressRepository;

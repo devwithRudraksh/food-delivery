@@ -1,5 +1,6 @@
 package com.fooddelivery.entity;
 
+import com.fooddelivery.enums.MenuCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,9 @@ public class MenuItem {
 
     private String name;
     private Double price;
+
+    @Enumerated(EnumType.STRING)
+    private MenuCategory category;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")

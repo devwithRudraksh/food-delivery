@@ -1,7 +1,7 @@
 package com.fooddelivery.service.impl;
 
-import com.fooddelivery.dto.RestaurantRequest;
-import com.fooddelivery.dto.RestaurantResponse;
+import com.fooddelivery.dto.request.RestaurantRequest;
+import com.fooddelivery.dto.response.RestaurantResponse;
 import com.fooddelivery.entity.Restaurant;
 import com.fooddelivery.repository.RestaurantRepository;
 import org.junit.jupiter.api.Test;
