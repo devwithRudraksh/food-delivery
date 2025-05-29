@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
                 .user(user)
                 .restaurant(restaurant)
                 .status(OrderStatus.PLACED)
-                .paymentStatus(PaymentStatus.PENDING)  // <---- NEW
+                .paymentStatus(PaymentStatus.PENDING)  //
                 .orderTime(LocalDateTime.now())
                 .build();
 
@@ -148,6 +148,7 @@ public class OrderServiceImpl implements OrderService {
                         .status(order.getStatus())
                         .paymentStatus(order.getPaymentStatus())
                         .orderTime(order.getOrderTime())
+                        .restaurantName(order.getRestaurant() != null ? order.getRestaurant().getName() : null) // FIXED
                         .build())
                 .toList();
     }
