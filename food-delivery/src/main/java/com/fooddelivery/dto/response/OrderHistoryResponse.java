@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,5 +21,6 @@ public class OrderHistoryResponse {
     private LocalDateTime orderTime;
     private PaymentStatus paymentStatus;
     private String restaurantName;
+    private List<OrderItemResponse> items;
 }
 

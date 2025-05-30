@@ -4,13 +4,16 @@ import com.fooddelivery.dto.request.OrderItemRequest;
 import com.fooddelivery.dto.request.OrderRequest;
 import com.fooddelivery.dto.request.OrderStatusRequest;
 import com.fooddelivery.dto.response.OrderHistoryResponse;
+import com.fooddelivery.dto.response.OrderItemResponse;
 import com.fooddelivery.dto.response.OrderResponse;
 import com.fooddelivery.dto.response.PaymentResponse;
 import com.fooddelivery.entity.*;
 import com.fooddelivery.enums.OrderStatus;
 import com.fooddelivery.enums.PaymentStatus;
+import com.fooddelivery.exception.InsufficientBalanceException;
 import com.fooddelivery.repository.*;
 import com.fooddelivery.service.OrderService;
+import com.fooddelivery.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
+    private final WalletService walletService;
 
     @Override
     public OrderResponse placeOrder(OrderRequest request) {
@@ -72,13 +76,20 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(totalAmount);
 
         Order savedOrder = orderRepository.save(order);
-
+        List<OrderItemResponse> itemResponses = savedOrder.getItems().stream()
+                .map(item -> OrderItemResponse.builder()
+                        .itemName(item.getMenuItem().getName())
+                        .price(item.getPrice())
+                        .quantity(item.getQuantity())
+                        .build())
+                .toList();
         return OrderResponse.builder()
                 .orderId(savedOrder.getId())
                 .totalAmount(savedOrder.getTotalAmount())
                 .orderStatus(savedOrder.getStatus())
-                .paymentStatus(savedOrder.getPaymentStatus())  // <---- NEW
+                .paymentStatus(savedOrder.getPaymentStatus())
                 .orderTime(savedOrder.getOrderTime())
+                .items(itemResponses)
                 .build();
     }
 
@@ -101,6 +112,7 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+
     @Override
     public PaymentResponse processPayment(Long orderId) {
         log.info("Received request to process payment for order ID: {}", orderId);
@@ -118,38 +130,65 @@ public class OrderServiceImpl implements OrderService {
                     .build();
         }
 
-        boolean success = Math.random() > 0.2;
-        log.info("Simulated payment result: {}", success ? "SUCCESS" : "FAILED");
+        try {
+            // ✅ Try deducting wallet
+            walletService.deductAmount(order.getUser().getId(), order.getTotalAmount());
+            order.setStatus(OrderStatus.CONFIRMED);
+            order.setPaymentStatus(PaymentStatus.PAID);
+            orderRepository.save(order);
 
-        OrderStatus newOrderStatus = success ? OrderStatus.CONFIRMED : OrderStatus.CANCELLED;
-        PaymentStatus newPaymentStatus = success ? PaymentStatus.PAID : PaymentStatus.FAILED;
+            log.info("Payment successful, wallet deducted. Order ID: {}", order.getId());
 
-        order.setStatus(newOrderStatus);
-        order.setPaymentStatus(newPaymentStatus);
+            return PaymentResponse.builder()
+                    .orderId(order.getId())
+                    .status(order.getStatus())
+                    .message("Payment successful via wallet")
+                    .build();
 
-        orderRepository.save(order);
-        log.info("Updated order status to: {} and payment status to: {}", newOrderStatus, newPaymentStatus);
+        } catch (InsufficientBalanceException e) {
+            // ❌ Handle failure gracefully
+            order.setStatus(OrderStatus.CANCELLED);
+            order.setPaymentStatus(PaymentStatus.FAILED);
+            orderRepository.save(order);
 
-        return PaymentResponse.builder()
-                .orderId(order.getId())
-                .status(newOrderStatus)
-                .message(success ? "Payment Successful" : "Payment Failed")
-                .build();
+            log.warn("Payment failed for order {} due to: {}", order.getId(), e.getMessage());
+
+            return PaymentResponse.builder()
+                    .orderId(order.getId())
+                    .status(order.getStatus())
+                    .message("Payment failed: " + e.getMessage())
+                    .build();
+        }
     }
+
 
     @Override
     public List<OrderHistoryResponse> getOrdersByUserId(Long userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-
+        log.info("orderHistory for user id {}",userId);
+        List<Order> orders = orderRepository.findByUserIdOrderByOrderTimeDesc(userId);
+          log.info("Orders found {} for user id :{}",orders.size(),userId);
         return orders.stream()
-                .map(order -> OrderHistoryResponse.builder()
-                        .orderId(order.getId())
-                        .totalAmount(order.getTotalAmount())
-                        .status(order.getStatus())
-                        .paymentStatus(order.getPaymentStatus())
-                        .orderTime(order.getOrderTime())
-                        .restaurantName(order.getRestaurant() != null ? order.getRestaurant().getName() : null) // FIXED
-                        .build())
+                .map(order -> {
+                    // 🧾 Convert OrderItem -> OrderItemResponse
+                    List<OrderItemResponse> itemResponses = order.getItems().stream()
+                            .map(item -> OrderItemResponse.builder()
+                                    .itemName(item.getMenuItem().getName())
+                                    .quantity(item.getQuantity())
+                                    .price(item.getPrice())
+                                    .build())
+                            .toList();
+                    log.info("🧾 Order ID: {} | Items: {} | Total: {}",
+                            order.getId(), itemResponses.size(), order.getTotalAmount());
+                    return OrderHistoryResponse.builder()
+                            .orderId(order.getId())
+                            .totalAmount(order.getTotalAmount())
+                            .status(order.getStatus())
+                            .paymentStatus(order.getPaymentStatus())
+                            .orderTime(order.getOrderTime())
+                            .restaurantName(order.getRestaurant() != null ? order.getRestaurant().getName() : null)
+                            .items(itemResponses) // ✅ NEW
+                            .build();
+                })
                 .toList();
     }
 }
