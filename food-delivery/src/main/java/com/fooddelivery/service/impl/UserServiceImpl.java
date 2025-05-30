@@ -4,7 +4,9 @@ import com.fooddelivery.dto.request.LoginRequest;
 import com.fooddelivery.dto.request.UserSignupRequest;
 import com.fooddelivery.dto.response.UserResponse;
 import com.fooddelivery.entity.User;
+import com.fooddelivery.entity.Wallet;
 import com.fooddelivery.repository.UserRepository;
+import com.fooddelivery.repository.WalletRepository;
 import com.fooddelivery.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
+private final WalletRepository walletRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -35,6 +37,14 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         User saved = userRepository.save(user);
+        Wallet wallet = Wallet.builder()
+                .user(saved)
+                .balance(1000.0) // default balance
+                .build();
+
+        walletRepository.save(wallet);
+        log.info("Wallet created for user {} with ₹1000 balance", saved.getId());
+
         log.info("User registered successfully: {}", saved.getEmail());
         return UserResponse.builder()
                 .id(saved.getId())

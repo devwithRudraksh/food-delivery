@@ -44,11 +44,7 @@ public class OrderController {
         OrderResponse response = orderService.updateOrderStatus(id, request);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/users/{userId}/orders")
-    public ResponseEntity<List<OrderHistoryResponse>> getOrderHistory(@PathVariable Long userId) {
-        List<OrderHistoryResponse> history = orderService.getOrdersByUserId(userId);
-        return ResponseEntity.ok(history);
-    }
+
 
 
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -15,5 +16,6 @@ public class OrderResponse {
     private OrderStatus orderStatus;
     private PaymentStatus paymentStatus;
     private LocalDateTime orderTime;
+    private List<OrderItemResponse> items; //added later for retrieving orderitems
 }
 

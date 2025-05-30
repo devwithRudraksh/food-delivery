@@ -3,6 +3,7 @@ import com.fooddelivery.dto.request.LoginRequest;
 import com.fooddelivery.dto.request.UserSignupRequest;
 import com.fooddelivery.entity.User;
 import com.fooddelivery.repository.UserRepository;
+import com.fooddelivery.repository.WalletRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -13,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceImplTest {
+    @Mock
+    private WalletRepository walletRepository;
 
     @Mock
     private UserRepository userRepository;
