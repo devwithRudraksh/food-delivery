@@ -5,6 +5,8 @@ import com.fooddelivery.dto.request.UserSignupRequest;
 import com.fooddelivery.dto.response.UserResponse;
 import com.fooddelivery.entity.User;
 import com.fooddelivery.entity.Wallet;
+import com.fooddelivery.exception.EmailAlreadyExistsException;
+import com.fooddelivery.exception.InvalidPasswordException;
 import com.fooddelivery.repository.UserRepository;
 import com.fooddelivery.repository.WalletRepository;
 import com.fooddelivery.service.UserService;
@@ -26,7 +28,7 @@ private final WalletRepository walletRepository;
     public UserResponse registerUser(UserSignupRequest request) {
         log.info("Attempting to register user with email: {}", request.getEmail());
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
 
@@ -39,7 +41,7 @@ private final WalletRepository walletRepository;
         User saved = userRepository.save(user);
         Wallet wallet = Wallet.builder()
                 .user(saved)
-                .balance(1000.0) // default balance
+                .balance(3000.0) // default balance
                 .build();
 
         walletRepository.save(wallet);
@@ -63,7 +65,7 @@ private final WalletRepository walletRepository;
 
         if (!user.getPassword().equals(request.getPassword())) {
             log.warn("Invalid password attempt for user: {}", request.getEmail());
-            throw new RuntimeException("Invalid password");
+            throw new InvalidPasswordException("Invalid password");
         }
         log.info("Login successful for user: {}", user.getEmail());
 

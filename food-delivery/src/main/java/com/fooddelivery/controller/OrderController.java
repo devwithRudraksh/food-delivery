@@ -21,21 +21,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping
-    public ResponseEntity<OrderResponse> placeOrder(@RequestBody OrderRequest request) {
-        log.info("Received order request: {}", request);
 
-        OrderResponse response = orderService.placeOrder(request);
-
-        log.info("Order placed successfully with ID: {}", response.getOrderId());
-
-        return ResponseEntity.ok(response);
-    }
-    @PostMapping("/{id}/pay")
-    public ResponseEntity<PaymentResponse> payForOrder(@PathVariable Long id) {
-        PaymentResponse response = orderService.processPayment(id);
-        return ResponseEntity.ok(response);
-    }
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @PathVariable Long id,
