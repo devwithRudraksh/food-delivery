@@ -4,6 +4,7 @@ import com.fooddelivery.dto.request.LoginRequest;
 import com.fooddelivery.dto.request.UserSignupRequest;
 import com.fooddelivery.dto.response.UserResponse;
 import com.fooddelivery.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class UserController {
     }
     @CrossOrigin
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserSignupRequest request) {
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody UserSignupRequest request) {
         UserResponse response = userService.registerUser(request);
         return ResponseEntity.ok(response);
 
